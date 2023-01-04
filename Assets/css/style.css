@@ -40,15 +40,63 @@ header h3 {
   text-align: right;
   padding-right: 20px;
 }
+.container {
+  padding: 20px;
+  flex-direction: column;
+  margin: auto;
+  width: 50%;
+}
+.show{
+  display: flex;
+}
 
 h1 {
   color: var(--fontblack);
-  font-size: 50px;
+  font-size: 60px;
   font-weight: bolder;
 }
-#high-scores:hover {
+
+p {
+  color: var(--fontblack);
+  font-size: 2.0rem;
+  font-weight: lighter;
+}
+.btn {
+  background: var(--buttoncolor);
   color: var(--hover);
-  text-shadow:2px 2px 8px var(--light);
+  border-radius: 10px;
+  padding: 10px;
+  border: none;
+  box-shadow: 0 1px gray;
+  cursor: pointer;
+}
+
+.startquiz {
+  margin-top: 15px;
+  width: 25%;
+}
+
+.btn:hover {
+  background: var(--light);
+  border-radius: 10px;
+  box-shadow: 0 1px gray;
+  cursor: pointer;
+}
+
+.quizshow {
+  align-items: center;
+  text-align: center;
+}
+
+.quizshow h1, 
+.quizshow p {
+  text-align: center;
+
+}
+
+#high-scores:hover {
+  color: var(--light);
+  text-shadow:1px 1px 4px var(--light);
 }
 
 
