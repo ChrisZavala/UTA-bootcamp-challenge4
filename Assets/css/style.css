@@ -1,0 +1,32 @@
+*{
+  box-sizing: border-box;
+}
+
+/* I used these colors on my portfolio page and liked them and I will use them again.  */
+:root {
+  --light: #58C0A9;
+  --hover: #FFFCEF;
+  --canvascolor: #fbfbfb;
+  --colortrans: #20A4F3;
+  --buttoncolor: #631D76;
+}
+
+
+body {
+  background-color: var(--canvascolor);
+  color: var(--light);
+  margin: 0;
+  padding: 0;
+  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  margin: auto;
+  width: 75%;
+}
+
+
+
+
