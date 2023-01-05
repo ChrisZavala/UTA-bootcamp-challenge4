@@ -67,3 +67,51 @@ var totalPoints = 0;
 var totalTime = 60;
 var highscores;
 var lastQuestion = false;
+
+var timerSpan = document.querySelector("#timer");
+var startDiv = document.querySelector("#container");
+var quizDiv = document.querySelector("#questioncontainer");
+var endQuiz = document.querySelector("#endcontainer");
+
+start.addEventListener("click", function() {
+    startDiv.style.display = "none";
+    quizDiv.style.display = "block";
+    generateQuestions(); 
+
+
+    var interval = setInterval(function() {
+        totalTime--;
+        timerSpan.innerHTML = totalTime;
+        if (totalTime === 0 || lastQuestion) {
+            clearInterval(interval);
+            // endGame();
+        }
+    }, 1000);
+
+});
+
+generateQuestions = () => {
+    document.getElementById("questions").innerHTML = questions[count].question; 
+    document.getElementById("answerbuttons").innerHTML = "";
+    console.log(questions);
+    console.log(answerbuttons);
+
+
+    questions[count].choices.map((choice, i) =>{
+        var btn = document.createElement("button");
+        var textnode = document.createTextNode(choice);
+        btn.appendChild(textnode);
+        document.getElementById("answerbuttons").appendChild(btn);
+        btn.setAttribute("data", choice);
+        btn.setAttribute("id", 'btn${i}' );
+        btn.setAttribute("answer", questions[count].answer);
+        document.querySelector('.btn-grid').addEventListener("click", function(e) {
+            console.log(e.target.getAttribute("data"));
+            if(e.target.getAttribute("data") === e.target.getAttribute("answer")){
+                answeredRight();
+            } else {
+                answeredWrong();
+            }
+        });
+    });
+};
