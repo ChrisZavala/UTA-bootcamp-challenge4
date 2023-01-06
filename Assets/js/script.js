@@ -52,6 +52,7 @@ var containerScoreBannerEl = document.getElementById("scorebanner");
 var containerFormInitialsEl = document.getElementById("initalsbox");
 var containerHighScoresEl = document.getElementById("high-scores-container");
 var highScoresListEl = document.getElementById("high-scores-list");
+var viewHighScoresEl = document.getElementById("high-scores");
 var btnGoBackEl = document.querySelector("#goback");
 var btnClearHighScores = document.querySelector("#clearhighscores");
 var correctEl = document.getElementById("Correct");
@@ -77,7 +78,7 @@ var startQuiz = function() {
 }
 
 var interval = function () {
-    timeLeft = 60;
+    timeLeft = 30;
 
     var timecheck = setInterval(function() {
         timeEl.innerText = timeLeft;
@@ -94,6 +95,27 @@ var interval = function () {
     }, 1000)
 }
 
+var startOver = function() {
+    containerHighScoresEl.classList.add("hide")
+    containerHighScoresEl.classList.remove("show")
+    containerStartEl.classList.remove("hide");
+    containerStartEl.classList.add("show")
+    containerScoreBannerEl.removeChild(containerScoreBannerEl.lastChild)
+    QuestionIndex = 0
+    EndGame = ""
+    timeEl.textContent = 0
+    TotalPoints = 0
+    
+    if (correctEl.className =  "show") {
+        correctEl.classList.remove("show");
+        correctEl.classList.add("hide");
+    }
+    if (wrongEl.className = "show") {
+        wrongEl.classList.remove("show");
+        wrongEl.classList.add("hide");
+    }
+}
+
 var generateQuestion = function() {
     showQuestion(arrayShuffleQuestions[QuestionIndex])
     resetAnswer()
@@ -107,11 +129,12 @@ var resetAnswer = function () {
 
 var showQuestion = function (index) {
     questionEl.innerText = index.question
+    console.log(index);
     for (var i = 0; i < index.choices.length; i++) {
         var answerbutton = document.createElement("button")
         answerbutton.innerText = index.choices[i].choices
-        answerbutton.classList.add("btn")
-        answerbutton.classList.add('btn')
+        answerbutton.classList.add("answerbuttons")
+        answerbutton.classList.add('answerbuttons')
         answerbutton.addEventListener("click", checkAnswer)
         answerButtonsEl.appendChild(answerbutton)
     }
@@ -179,7 +202,7 @@ var highScore = function(event) {
         return;
     }
 
-    formSubmit.reset();
+    containerFormInitialsEl.reset();
 
     var HighScore = {
         initials: initials, 
@@ -203,5 +226,70 @@ var highScore = function(event) {
     showHighScores();
 }
 
+var savedHighScores = function() {
+    localStorage.setItem("HighScores", JSON.stringify(highScoresArr))
+
+}
+
+var loadHighScore = function() {
+    var loadHighScore = localStorage.getItem("HighScores")
+        if (!loadHighScore) {
+            return false;
+        }
+
+        loadHighScore = JSON.parse(loadHighScore);
+        loadHighScore = sort((a, b) => { return b.TotalPoints-a.TotalPoints})
+
+        for (var i = 0; i < loadHighScore.length; i++) {
+            var highscoreEl = document.createElement("li");
+            highscoreEl.className = "high-scores";
+            highscoreEl.innerText = loadHighScore[i].initials + " - " + loadHighScore[i].TotalPoints;
+            highScoresListEl.appendChild(highscoreEl);
+            highScoresArr.push(loadHighScore[i]);
+        }
+}
+
+var showHighScores = function() {
+    containerHighScoresEl.classList.remove("hide");
+    containerHighScoresEl.classList.add("show");
+    EndGame = "true"
+
+
+    if (containerEndEl.className = "show") {
+        containerEndEl.classList.remove("show");
+        containerEndEl.classList.add("hide");
+    }
+    if (containerStartEl.className = "show") {
+        containerStartEl.classList.remove("show");
+        containerStartEl.classList.add("hide");
+    }
+    if (containerQuestionEl.className = "show") {
+        containerQuestionEl.classList.remove("show");
+        containerQuestionEl.classList.add("hide");
+    }
+    if (correctEl.className = "show") {
+        correctEl.classList.remove("show");
+        correctEl.classList.add("hide");
+    }
+    if (wrongEl.className = "show") {
+        wrongEl.classList.remove("show");
+        wrongEl.classList.add("hide");
+    }
+}
+
+var clearScores = function() {
+    highScoresArr = [];
+
+    while (highScoresListEl.firstChild) {
+        highScoresListEl.removeChild(highScoresListEl.firstChild);
+    }
+    localStorage.clear(highScoresArr);
+}
+loadHighScore()
 
 btnStartEl.addEventListener("click", startQuiz)
+containerFormInitialsEl.addEventListener("submit", highScore)
+viewHighScoresEl.addEventListener("click", showHighScores)
+btnGoBackEl.addEventListener("click", startOver)
+btnClearHighScores.addEventListener("click", clearScores)
+
