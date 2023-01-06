@@ -1,52 +1,52 @@
 // User is presented with 5 questions - array of objects
 //I know I did more than the required question in my array so :p
 var questions = [
-    { 
-        question: "Arrays in Java Script can be used to store what type of data?",
-        choices: ["1. Numbers", "2. Boolean", "3. Strings", "4. All of the above"], 
-        answer: "4. All of the above"
+    { question: "Arrays in Java Script can be used to store what type of data?",
+      answer: "4. All of the above", 
+      choices: [{choice: "1. Numbers"}, {choice: "2. Boolean"}, {choice: "3. Strings"}, {choice: "4. All of the above"}]
+    },
 
+    { question: "JavaScript is an _______ language?",
+      answer: "1. Object-Oriented", 
+      choices: [{choice: "1. Object-Oriented"}, {choice: "2. Object-Based"}, {choice: "3. Procedural"}, {choice: "4. None of the above"}]
     },
-    {
-        question: "JavaScript is an _______ language?",
-        choices: ["1. Object-Oriented", "2. Object-Based", "3. Procedural", "4. None of the above"], 
-        answer: "1. Object-Oriented" 
+
+    { question: "Which of the following keywords is used to define a variable in JavaScript?",
+      answer: "3. Both A and B", 
+      choices: [{choice: "1. var"}, {choice: "2. let"}, {choice: "3. Both A and B"}, {choice: "4. None of the above"}]
     },
-    {
-        question: "Which of the following keywords is used to define a variable in JavaScript?",
-        choices: ["1. var", "2. let", "3. Both A and B", "4. None of the above"], 
-        answer: "3. Both A and B"
+
+    { question: "Which of the following methods can be used to display data in some form using JavaScript?",
+      answer: "4. All of the above", 
+      choices: [{choice: "1. document.write()"}, {choice: "2. console.log()"}, {choice: "3. window.alert()"}, {choice: "4. All of the above"}]
     },
-    {
-        question: "Which of the following methods can be used to display data in some form using JavaScript?",
-        choices: ["1. document.write()", "2. console.log()", "3. window.alert()", "4. All of the above"], 
-        answer: "4. All of the above"
+
+    { question: "Which function is used to serialize an object into a JSON string in JavaScript?",
+      answer: "1. stringify()", 
+      choices: [{choice: "1. stringify()"}, {choice: "2. parse()"}, {choice: "3. convert()"}, {choice: "4. None of the above"}]
     },
-    {
-        question: "Which function is used to serialize an object into a JSON string in JavaScript?",
-        choices: ["1. stringify()", "2. parse()", "3. convert()", "4. None of the above"], 
-        answer: "1. stringify()"
+
+    { question: "Which of the following is not a JavaScript framework?",
+      answer: "4. Cassandra", 
+      choices: [{choice: "1. Node"}, {choice: "2. Vue"}, {choice: "3. React"}, {choice: "4. Cassandra"}]
     },
-    {
-        question: "Which of the following is not a JavaScript framework? ",
-        choices: ["1. Node", "2. Vue", "3. React", "4. Cassandra"], 
-        answer: "4. Cassandra"
+
+    { question: "How do we write a comment in JavaScript?",
+      answer: "2. //", 
+      choices: [{choice: "1. /* */"}, {choice: "2. //"}, {choice: "3. #"}, {choice: "4. $$"}]
     },
-    {
-        question: "How do we write a comment in JavaScript?",
-        choices: ["1. /* */", "2. //", "3. #", "4. $$"], 
-        answer: "2. //"
-    }
+
+    
 ];
 
 //starting from the top of the HTML and grabbing the variables of the elements
 var viewHighScoresEl = document.getElementById("high-scores");
-var timeEl = document.querySelector("#timer");
+var timerEl = document.querySelector("#timer");
 var containerStartEl = document.getElementById("container");
 var btnStartEl = document.querySelector("#start-quiz");
 var containerQuestionEl = document.getElementById("questioncontainer");
 var questionEl = document.getElementById("questions");
-var answerButtonsEl = document.getElementById("#answerbuttons");
+var answerButtonsEl = document.getElementById("answerbuttons");
 var containerEndEl = document.getElementById("endcontainer");
 var containerScoreBannerEl = document.getElementById("scorebanner");
 var containerFormInitialsEl = document.getElementById("initalsbox");
@@ -60,7 +60,7 @@ var wrongEl = document.getElementById("Wrong");
 var TotalPoints = 0;
 var EndGame;
 var timeLeft;
-var timerEl = 0;
+timerEl.innerText;
 var highScoresArr = [];
 var arrayShuffleQuestions;
 var QuestionIndex = 0;
@@ -81,8 +81,8 @@ var interval = function () {
     timeLeft = 30;
 
     var timecheck = setInterval(function() {
-        timeEl.innerText = timeLeft;
-        timeLeft--
+        timerEl.innerText = timeLeft;
+        timeLeft--;
 
         if (EndGame) {
             clearInterval(timecheck)
@@ -103,7 +103,7 @@ var startOver = function() {
     containerScoreBannerEl.removeChild(containerScoreBannerEl.lastChild)
     QuestionIndex = 0
     EndGame = ""
-    timeEl.textContent = 0
+    timerEl.textContent = 0
     TotalPoints = 0
     
     if (correctEl.className =  "show") {
@@ -115,10 +115,11 @@ var startOver = function() {
         wrongEl.classList.add("hide");
     }
 }
-
+//dang by switching the reset Answer part here in the showQuestion function I was not getting the buttons created ugh!
 var generateQuestion = function() {
-    showQuestion(arrayShuffleQuestions[QuestionIndex])
     resetAnswer()
+    showQuestion(arrayShuffleQuestions[QuestionIndex])
+    
 }
 
 var resetAnswer = function () {
@@ -131,16 +132,16 @@ var showQuestion = function (index) {
     questionEl.innerText = index.question
     console.log(index);
     for (var i = 0; i < index.choices.length; i++) {
-        var answerbutton = document.createElement("button")
-        answerbutton.innerText = index.choices[i].choices
-        answerbutton.classList.add("answerbuttons")
-        answerbutton.classList.add('answerbuttons')
+        var answerbutton = document.createElement("answerbuttons")
+        answerbutton.innerText = index.choices[i].choice
+        answerbutton.classList.add("btn")
+        answerbutton.classList.add("answerbtn")
         answerbutton.addEventListener("click", checkAnswer)
         answerButtonsEl.appendChild(answerbutton)
     }
 
 
-};
+}
 
 var answeredRight = function () {
     if (correctEl.className = "hide") {
