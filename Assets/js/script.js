@@ -46,7 +46,7 @@ var containerStartEl = document.getElementById("container");
 var btnStartEl = document.querySelector("#start-quiz");
 var containerQuestionEl = document.getElementById("questioncontainer");
 var questionEl = document.getElementById("questions");
-var answerButtonsEl = document.getElementById("answerbuttons");
+var answerButtonsEl = document.getElementById("#answerbuttons");
 var containerEndEl = document.getElementById("endcontainer");
 var containerScoreBannerEl = document.getElementById("scorebanner");
 var containerFormInitialsEl = document.getElementById("initalsbox");
@@ -59,12 +59,11 @@ var wrongEl = document.getElementById("Wrong");
 var TotalPoints = 0;
 var EndGame;
 var timeLeft;
-timerEl.innerText = 0;
+var timerEl = 0;
 var highScoresArr = [];
 var arrayShuffleQuestions;
 var QuestionIndex = 0;
 
-btnStartEl.addEventListener("click", startQuiz);
 
 var startQuiz = function() {
     containerStartEl.classList.add("hide");
@@ -75,6 +74,24 @@ var startQuiz = function() {
 
         interval()
         generateQuestion()
+}
+
+var interval = function () {
+    timeLeft = 60;
+
+    var timecheck = setInterval(function() {
+        timeEl.innerText = timeLeft;
+        timeLeft--
+
+        if (EndGame) {
+            clearInterval(timecheck)
+        }
+        if (timecheck < 0) {
+            showScore()
+            timerEl.innerText = 0
+            clearInterval(timecheck)
+        }
+    }, 1000)
 }
 
 var generateQuestion = function() {
@@ -90,11 +107,11 @@ var resetAnswer = function () {
 
 var showQuestion = function (index) {
     questionEl.innerText = index.question
-    for (var i = 0, i < index.choices.length; i++) {
+    for (var i = 0; i < index.choices.length; i++) {
         var answerbutton = document.createElement("button")
         answerbutton.innerText = index.choices[i].choices
         answerbutton.classList.add("btn")
-        answerbutton.classList.add('answerbuttons')
+        answerbutton.classList.add('btn')
         answerbutton.addEventListener("click", checkAnswer)
         answerButtonsEl.appendChild(answerbutton)
     }
@@ -102,3 +119,89 @@ var showQuestion = function (index) {
 
 };
 
+var answeredRight = function () {
+    if (correctEl.className = "hide") {
+        correctEl.classList.remove("hide")
+        correctEl.classList.add("banner")
+        wrongEl.classList.remove("banner")
+        wrongEl.classList.add("hide")
+
+
+    }
+}
+
+var answeredWrong = function () {
+    if (wrongEl.className = "hide") {
+        wrongEl.classList.remove("hide")
+        wrongEl.classList.add("banner")
+        correctEl.classList.remove("banner")
+        correctEl.classList.add("hide")
+    }
+}
+
+var checkAnswer = function (event) {
+    var answerpicked = event.target
+    if(arrayShuffleQuestions[QuestionIndex].answer === answerpicked.innerText) {
+        answeredRight ()
+        TotalPoints = TotalPoints + 5
+
+    } else {
+        answeredWrong()
+        TotalPoints = TotalPoints - 5
+        timeLeft = timeLeft -5;
+
+    };
+
+    QuestionIndex++
+    if (arrayShuffleQuestions.length > QuestionIndex + 1) {
+        generateQuestion()
+
+    } else {
+        EndGame = "true";
+        showScore();
+    }
+}
+
+var showScore = function() {
+    containerQuestionEl.classList.add("hide");
+    containerEndEl.classList.remove("hide");
+    containerEndEl.classList.add("show");
+    var displayScore = document.createElement("p");
+    displayScore.innerText = ("Your Score is: "  + TotalPoints + "");
+    containerScoreBannerEl.appendChild(displayScore);  
+}
+
+var highScore = function(event) {
+    event.PreventDefault()
+    var initials = document.querySelector("#initials").value;
+    if (!initials) {
+        alert("Please Enter your Initials");
+        return;
+    }
+
+    formSubmit.reset();
+
+    var HighScore = {
+        initials: initials, 
+        TotalPoints: TotalPoints
+    }
+
+    highScoresArr.push(HighScore);
+    highScoresArr.sore((a,b) => {return b.TotalPoints-a.TotalPoints});
+
+    while (highScoresListEl.firstChild) {
+        highScoresListEl.removeChild(highScoresListEl.firstChild)
+    }
+    for (var i = 0; i < highScoresArr.length; i++) {
+        var highscoreEl = document.createElement("li");
+        highscoreEl.className = "high-score";
+        highscoreEl.innerHTML = highScoresArr[i].initials + " : " + highScoresArr[i].TotalPoints;
+        highScoresListEl.appendChild(highscoreEl);
+    }
+
+    savedHighScores();
+    showHighScores();
+}
+
+
+btnStartEl.addEventListener("click", startQuiz)
