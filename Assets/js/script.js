@@ -10,7 +10,7 @@ var questions = [
     {
         question: "JavaScript is an _______ language?",
         choices: ["1. Object-Oriented", "2. Object-Based", "3. Procedural", "4. None of the above"], 
-        answer: "1. Object-Oriented " 
+        answer: "1. Object-Oriented" 
     },
     {
         question: "Which of the following keywords is used to define a variable in JavaScript?",
@@ -38,80 +38,67 @@ var questions = [
         answer: "2. //"
     }
 ];
-    //  Format for questions???
-        // Object that contains {question: string, Choices: array, answer: string}
-        // Display question - loop
-        //  append question
-        // append choices array
 
-// user selects an answer(button,radio,checkboxes)data-answer = ""
-    //  click event is on the parent container
-    //  how to know which element was clicked(event.target)
-    // if the answer is correct display next question access array of questions object 
-    // if answer is incorrect add 15 seconds to score and display next question
+//starting from the top of the HTML and grabbing the variables of the elements
+var viewHighScoresEl = document.getElementById("high-scores");
+var timeEl = document.querySelector("#timer");
+var containerStartEl = document.getElementById("container");
+var btnStartEl = document.querySelector("#start-quiz");
+var containerQuestionEl = document.getElementById("questioncontainer");
+var questionEl = document.getElementById("questions");
+var answerButtonsEl = document.getElementById("answerbuttons");
+var containerEndEl = document.getElementById("endcontainer");
+var containerScoreBannerEl = document.getElementById("scorebanner");
+var containerFormInitialsEl = document.getElementById("initalsbox");
+var containerHighScoresEl = document.getElementById("high-scores-container");
+var highScoresListEl = document.getElementById("high-scores-list");
+var btnGoBackEl = document.querySelector("#goback");
+var btnClearHighScores = document.querySelector("#clearhighscores");
+var correctEl = document.getElementById("Correct");
+var wrongEl = document.getElementById("Wrong");
+var TotalPoints = 0;
+var EndGame;
+var timeLeft;
+timerEl.innerText = 0;
+var highScoresArr = [];
+var arrayShuffleQuestions;
+var QuestionIndex = 0;
 
-    //  When all questions are answered display form to submit initials
-    //  save form values score and initials to local STrorage
+btnStartEl.addEventListener("click", startQuiz);
 
-//  change to highscores HTML
-    //  read values from localstorage
-    //  append score values to page
+var startQuiz = function() {
+    containerStartEl.classList.add("hide");
+    containerStartEl.classList.remove("show");
+    containerQuestionEl.classList.remove("hide");
+    containerQuestionEl.classList.add("show");
+    arrayShuffleQuestions = questions.sort(() => Math.random() -0.5);
 
-var start = document.querySelector("#start-quiz");
-var scoreShown = document.querySelector("#scorebanner");
-var submitBtn = document.querySelector("#submitscore");
-var highScoreBtn = document.querySelector("#high-scores");
-var scoresDiv = document.querySelector("#high-scores-container");
-var count = 0;
-var totalPoints = 0;
-var totalTime = 60;
-var highscores;
-var lastQuestion = false;
+        interval()
+        generateQuestion()
+}
 
-var timerSpan = document.querySelector("#timer");
-var startDiv = document.querySelector("#container");
-var quizDiv = document.querySelector("#questioncontainer");
-var endQuiz = document.querySelector("#endcontainer");
+var generateQuestion = function() {
+    showQuestion(arrayShuffleQuestions[QuestionIndex])
+    resetAnswer()
+}
 
-start.addEventListener("click", function() {
-    startDiv.style.display = "none";
-    quizDiv.style.display = "block";
-    generateQuestions(); 
-
-
-    var interval = setInterval(function() {
-        totalTime--;
-        timerSpan.innerHTML = totalTime;
-        if (totalTime === 0 || lastQuestion) {
-            clearInterval(interval);
-            // endGame();
-        }
-    }, 1000);
-
-});
-
-generateQuestions = () => {
-    document.getElementById("questions").innerHTML = questions[count].question; 
-    document.getElementById("answerbuttons").innerHTML = "";
-    console.log(questions);
-    console.log(answerbuttons);
-
-
-    questions[count].choices.map((choice, i) =>{
-        var btn = document.createElement("button");
-        var textnode = document.createTextNode(choice);
-        btn.appendChild(textnode);
-        document.getElementById("answerbuttons").appendChild(btn);
-        btn.setAttribute("data", choice);
-        btn.setAttribute("id", 'btn${i}' );
-        btn.setAttribute("answer", questions[count].answer);
-        document.querySelector('.btn-grid').addEventListener("click", function(e) {
-            console.log(e.target.getAttribute("data"));
-            if(e.target.getAttribute("data") === e.target.getAttribute("answer")){
-                answeredRight();
-            } else {
-                answeredWrong();
-            }
-        });
-    });
+var resetAnswer = function () {
+    while (answerButtonsEl.firstChild) {
+        answerButtonsEl.removeChild(answerButtonsEl.firstChild)
+    };
 };
+
+var showQuestion = function (index) {
+    questionEl.innerText = index.question
+    for (var i = 0, i < index.choices.length; i++) {
+        var answerbutton = document.createElement("button")
+        answerbutton.innerText = index.choices[i].choices
+        answerbutton.classList.add("btn")
+        answerbutton.classList.add('answerbuttons')
+        answerbutton.addEventListener("click", checkAnswer)
+        answerButtonsEl.appendChild(answerbutton)
+    }
+
+
+};
+
