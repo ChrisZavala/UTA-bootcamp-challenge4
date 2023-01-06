@@ -58,42 +58,13 @@ var btnClearHighScores = document.querySelector("#clearhighscores");
 var correctEl = document.getElementById("Correct");
 var wrongEl = document.getElementById("Wrong");
 var TotalPoints = 0;
-var EndGame;
+var EndGame
 var timeLeft;
-timerEl.innerText;
+timerEl.innerText = 0;
 var highScoresArr = [];
 var arrayShuffleQuestions;
 var QuestionIndex = 0;
 
-
-var startQuiz = function() {
-    containerStartEl.classList.add("hide");
-    containerStartEl.classList.remove("show");
-    containerQuestionEl.classList.remove("hide");
-    containerQuestionEl.classList.add("show");
-    arrayShuffleQuestions = questions.sort(() => Math.random() -0.5);
-
-        interval()
-        generateQuestion()
-}
-
-var interval = function () {
-    timeLeft = 30;
-
-    var timecheck = setInterval(function() {
-        timerEl.innerText = timeLeft;
-        timeLeft--;
-
-        if (EndGame) {
-            clearInterval(timecheck)
-        }
-        if (timecheck < 0) {
-            showScore()
-            timerEl.innerText = 0
-            clearInterval(timecheck)
-        }
-    }, 1000)
-}
 
 var startOver = function() {
     containerHighScoresEl.classList.add("hide")
@@ -115,6 +86,39 @@ var startOver = function() {
         wrongEl.classList.add("hide");
     }
 }
+
+
+
+var Interval = function () {
+    timeLeft = 10;
+
+var timecheck = setInterval(function() {
+    timerEl.innerText = timeLeft;
+    timeLeft--
+
+    if (EndGame) {
+        clearInterval(timecheck)
+        }
+
+    if (timeLeft < 0) {
+            showScore()
+            timerEl.innerText = 0
+            clearInterval(timecheck)
+        }
+    }, 1000)
+}
+
+var startQuiz = function() {
+    containerStartEl.classList.add("hide");
+    containerStartEl.classList.remove("show");
+    containerQuestionEl.classList.remove("hide");
+    containerQuestionEl.classList.add("show");
+    arrayShuffleQuestions = questions.sort(() => Math.random() -0.5);
+
+        Interval()
+        generateQuestion()
+}
+
 //dang by switching the reset Answer part here in the showQuestion function I was not getting the buttons created ugh!
 var generateQuestion = function() {
     resetAnswer()
