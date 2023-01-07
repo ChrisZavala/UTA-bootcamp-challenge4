@@ -10,7 +10,8 @@
   --colortrans: #20A4F3;
   --buttoncolor: #631D76;
   --fontblack: black; 
-  --fadefont: darkgray; 
+  --fadefont: darkgray;
+  --highscores: #E1DEE3;  
   
 }
 
@@ -176,17 +177,50 @@ p {
 }
 
 li:nth-child(odd) {
-  background-color: var(--colortrans);
+  background-color: var(--highscores);
 }
 
 li {
-  font-size: 1.0rem;
+  font-size: 3rem;
+  color: black;
 }
 
 .btn high-score {
   margin-top: 15px;
   width: 5%;
 }
+#goback{
+/* margin-right: 50%;
+
+margin-top: 20%; */
+margin-bottom: 15%;
+}
+
+#clearhighscores{
+/* margin-right: 50%;
+margin-top: 20% */
+margin-bottom: 15%;
+}
 
 
+@media screen and (max-width: 1024px) {
+
+    .btn {
+        width: 100%;
+        font-size: 3.0vw;
+    }
+
+    #questions {
+        font-size: 4.5vw;
+    }
+
+    h1 {
+        font-size: 4.5vw;
+    }
+
+    p {
+        font-size: 3.0vw;
+    }
+
+}
 

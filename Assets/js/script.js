@@ -49,19 +49,18 @@ var questionEl = document.getElementById("questions");
 var answerButtonsEl = document.getElementById("answerbuttons");
 var containerEndEl = document.getElementById("endcontainer");
 var containerScoreBannerEl = document.getElementById("scorebanner");
-var containerFormInitialsEl = document.getElementById("initalsbox");
+var containerFormInitialsEl = document.getElementById("initialbox");
 var containerHighScoresEl = document.getElementById("high-scores-container");
 var highScoresListEl = document.getElementById("high-scores-list");
-var viewHighScoresEl = document.getElementById("high-scores");
 var btnGoBackEl = document.querySelector("#goback");
 var btnClearHighScores = document.querySelector("#clearhighscores");
 var correctEl = document.getElementById("Correct");
 var wrongEl = document.getElementById("Wrong");
-var TotalPoints = 0;
-var EndGame
+var score = 0;
+var endGame
 var timeLeft;
 timerEl.innerText = 0;
-var highScoresArr = [];
+var HighScores = [];
 var arrayShuffleQuestions;
 var QuestionIndex = 0;
 
@@ -73,9 +72,9 @@ var startOver = function() {
     containerStartEl.classList.add("show")
     containerScoreBannerEl.removeChild(containerScoreBannerEl.lastChild)
     QuestionIndex = 0
-    EndGame = ""
+    endGame = ""
     timerEl.textContent = 0
-    TotalPoints = 0
+    score = 0
     
     if (correctEl.className =  "show") {
         correctEl.classList.remove("show");
@@ -87,16 +86,16 @@ var startOver = function() {
     }
 }
 
-
-
+//This is my timer coundown down 
+//I was putting the timeLeft variable to 10 seconds just for testing purposes. 
 var Interval = function () {
-    timeLeft = 10;
+    timeLeft = 60;
 
 var timecheck = setInterval(function() {
     timerEl.innerText = timeLeft;
     timeLeft--
 
-    if (EndGame) {
+    if (endGame) {
         clearInterval(timecheck)
         }
 
@@ -108,12 +107,13 @@ var timecheck = setInterval(function() {
     }, 1000)
 }
 
+//here is where the quiz starts for me for the most part
 var startQuiz = function() {
     containerStartEl.classList.add("hide");
     containerStartEl.classList.remove("show");
     containerQuestionEl.classList.remove("hide");
     containerQuestionEl.classList.add("show");
-    arrayShuffleQuestions = questions.sort(() => Math.random() -0.5);
+    arrayShuffleQuestions = questions.sort(() => Math.random() -0.6);
 
         Interval()
         generateQuestion()
@@ -125,13 +125,15 @@ var generateQuestion = function() {
     showQuestion(arrayShuffleQuestions[QuestionIndex])
     
 }
-
+ 
 var resetAnswer = function () {
     while (answerButtonsEl.firstChild) {
         answerButtonsEl.removeChild(answerButtonsEl.firstChild)
     };
 };
 
+//Here is where the questions are coming in and they are getting randomized. 
+//Here is where the bubbles are getting created
 var showQuestion = function (index) {
     questionEl.innerText = index.question
     console.log(index);
@@ -146,7 +148,7 @@ var showQuestion = function (index) {
 
 
 }
-
+//Checking for right answer
 var answeredRight = function () {
     if (correctEl.className = "hide") {
         correctEl.classList.remove("hide")
@@ -157,7 +159,7 @@ var answeredRight = function () {
 
     }
 }
-
+//checking for wrong answer
 var answeredWrong = function () {
     if (wrongEl.className = "hide") {
         wrongEl.classList.remove("hide")
@@ -171,12 +173,12 @@ var checkAnswer = function (event) {
     var answerpicked = event.target
     if(arrayShuffleQuestions[QuestionIndex].answer === answerpicked.innerText) {
         answeredRight ()
-        TotalPoints = TotalPoints + 5
+        score = score + 5
 
     } else {
         answeredWrong()
-        TotalPoints = TotalPoints - 5
-        timeLeft = timeLeft -5;
+        score = score - 5;
+        timeLeft = timeLeft - 5;
 
     };
 
@@ -185,7 +187,7 @@ var checkAnswer = function (event) {
         generateQuestion()
 
     } else {
-        EndGame = "true";
+        endGame = "true";
         showScore();
     }
 }
@@ -194,16 +196,19 @@ var showScore = function() {
     containerQuestionEl.classList.add("hide");
     containerEndEl.classList.remove("hide");
     containerEndEl.classList.add("show");
+    
     var displayScore = document.createElement("p");
-    displayScore.innerText = ("Your Score is: "  + TotalPoints + "");
+    displayScore.innerText = ("Your Score is: "  + score + "");
     containerScoreBannerEl.appendChild(displayScore);  
 }
 
-var highScore = function(event) {
-    event.PreventDefault()
+var createHighScore = function(event) {
+    event.preventDefault()
     var initials = document.querySelector("#initials").value;
+    
     if (!initials) {
         alert("Please Enter your Initials");
+        console.log(event);
         return;
     }
 
@@ -211,19 +216,19 @@ var highScore = function(event) {
 
     var HighScore = {
         initials: initials, 
-        TotalPoints: TotalPoints
+        score: score
     }
 
-    highScoresArr.push(HighScore);
-    highScoresArr.sore((a,b) => {return b.TotalPoints-a.TotalPoints});
+    HighScores.push(HighScore);
+    HighScores.sort((a,b) => {return b.score-a.score});
 
     while (highScoresListEl.firstChild) {
         highScoresListEl.removeChild(highScoresListEl.firstChild)
     }
-    for (var i = 0; i < highScoresArr.length; i++) {
+    for (var i = 0; i < HighScores.length; i++) {
         var highscoreEl = document.createElement("li");
         highscoreEl.className = "high-score";
-        highscoreEl.innerHTML = highScoresArr[i].initials + " : " + highScoresArr[i].TotalPoints;
+        highscoreEl.innerHTML = HighScores[i].initials + " : " + HighScores[i].score;
         highScoresListEl.appendChild(highscoreEl);
     }
 
@@ -231,33 +236,37 @@ var highScore = function(event) {
     showHighScores();
 }
 
-var savedHighScores = function() {
-    localStorage.setItem("HighScores", JSON.stringify(highScoresArr))
+var savedHighScores = function(event) {
+    console.log(event);
+    localStorage.setItem("HighScores", JSON.stringify(HighScores))
 
 }
 
-var loadHighScore = function() {
-    var loadHighScore = localStorage.getItem("HighScores")
-        if (!loadHighScore) {
-            return false;
-        }
+// var loadHighScore = function() {
+//     var loadedHighScore = localStorage.getItem("HighScores")
+//         if (!loadedHighScore) {
+//             return false;
+//         }
 
-        loadHighScore = JSON.parse(loadHighScore);
-        loadHighScore = sort((a, b) => { return b.TotalPoints-a.TotalPoints})
+//         loadedHighScore = JSON.parse(loadedHighScore);
+//         loadedHighScore = sort((a, b) => {return b.score-a.score})
 
-        for (var i = 0; i < loadHighScore.length; i++) {
-            var highscoreEl = document.createElement("li");
-            highscoreEl.className = "high-scores";
-            highscoreEl.innerText = loadHighScore[i].initials + " - " + loadHighScore[i].TotalPoints;
-            highScoresListEl.appendChild(highscoreEl);
-            highScoresArr.push(loadHighScore[i]);
-        }
-}
+//         for (var i = 0; i < loadedHighScore.length; i++) {
+//             var highscoreEl = document.createElement("li");
+//             highscoreEl.className = "high-scores";
+//             highscoreEl.innerText = loadedHighScore[i].initials + " - " + loadedHighScore[i].score;
+//             highScoresListEl.appendChild(highscoreEl);
+
+//             HighScores.push(loadedHighScore[i]);
+            
+
+//         }
+// }
 
 var showHighScores = function() {
     containerHighScoresEl.classList.remove("hide");
     containerHighScoresEl.classList.add("show");
-    EndGame = "true"
+    endGame = "true"
 
 
     if (containerEndEl.className = "show") {
@@ -283,17 +292,17 @@ var showHighScores = function() {
 }
 
 var clearScores = function() {
-    highScoresArr = [];
+    HighScores = [];
 
     while (highScoresListEl.firstChild) {
         highScoresListEl.removeChild(highScoresListEl.firstChild);
     }
-    localStorage.clear(highScoresArr);
+    localStorage.clear(HighScores);
 }
-loadHighScore()
-
+// loadHighScore()
+//My event listeners for all my buttons and submits and goback and clear high scores
 btnStartEl.addEventListener("click", startQuiz)
-containerFormInitialsEl.addEventListener("submit", highScore)
+containerFormInitialsEl.addEventListener("submit", createHighScore)
 viewHighScoresEl.addEventListener("click", showHighScores)
 btnGoBackEl.addEventListener("click", startOver)
 btnClearHighScores.addEventListener("click", clearScores)
