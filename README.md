@@ -41,7 +41,8 @@ THEN I can save my initials and my score
 
 List your collaborators, if any, with links to their GitHub profiles.
 
-List your collaborators: Christopher Zavala: https://github.com/ChrisZavala 
+List your collaborators: 
+Christopher Zavala: https://github.com/ChrisZavala 
 Josh Goeke: https://github.com/joshuagoeke
 Karen Peazzoni: https://github.com/kpeazzoni
 
@@ -50,8 +51,6 @@ Karen Peazzoni: https://github.com/kpeazzoni
 Please refer to the LICENSE in the repo.
 
 ---
-
-🏆 The previous sections are the bare minimum, and your project will ultimately determine the content of this document. You might also want to consider adding the following sections.
 
 ## Tests
 
