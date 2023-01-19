@@ -34,9 +34,7 @@ var questions = [
     { question: "How do we write a comment in JavaScript?",
       answer: "2. //", 
       choices: [{choice: "1. /* */"}, {choice: "2. //"}, {choice: "3. #"}, {choice: "4. $$"}]
-    },
-
-    
+    },  
 ];
 
 //starting from the top of the HTML and grabbing the variables of the elements
@@ -196,7 +194,7 @@ var showScore = function() {
     containerQuestionEl.classList.add("hide");
     containerEndEl.classList.remove("hide");
     containerEndEl.classList.add("show");
-    
+    //displays the score on the page: 
     var displayScore = document.createElement("p");
     displayScore.innerText = ("Your Score is: "  + score + "");
     containerScoreBannerEl.appendChild(displayScore);  
@@ -205,7 +203,7 @@ var showScore = function() {
 var createHighScore = function(event) {
     event.preventDefault()
     var initials = document.querySelector("#initials").value;
-    
+    //pops the alert window if the user submits a black on the initials box
     if (!initials) {
         alert("Please Enter your Initials");
         console.log(event);
@@ -300,6 +298,9 @@ var clearScores = function() {
     localStorage.clear(HighScores);
 }
 // loadHighScore()
+
+
+
 //My event listeners for all my buttons and submits and goback and clear high scores
 btnStartEl.addEventListener("click", startQuiz)
 containerFormInitialsEl.addEventListener("submit", createHighScore)
